@@ -1,4 +1,3 @@
-<img width="1902" height="908" alt="image" src="https://github.com/user-attachments/assets/b005baec-56e4-4fb8-808e-7fbcf98fe6ac" />
 
 Project Live preivew link ►https://healthcaress.netlify.app/ website This project is based on a Healthcare hospitalsservice in this project and the technology is used here is react js.
 
@@ -31,11 +30,7 @@ The Package uses in this project:
 Home Page (Desktop)
 
 
-<img width="1900" height="806" alt="image" src="https://github.com/user-attachments/assets/61137687-c312-4899-b9c1-24700a6a1cb5" />
-<img width="1903" height="910" alt="image" src="https://github.com/user-attachments/assets/eac063b0-8876-4fa9-af8c-fe5ad373ecbe" />
-<img width="1901" height="750" alt="image" src="https://github.com/user-attachments/assets/42fe3c03-732b-4e78-acdb-98874c849f05" />
-<img width="1899" height="732" alt="image" src="https://github.com/user-attachments/assets/a16bd4d1-84ad-4fe8-9773-f91440a3432c" />
-<img width="1902" height="646" alt="image" src="https://github.com/user-attachments/assets/64ee4d04-c445-479e-bc92-f1751598f622" />
+<img width="1902" height="646" alt="Screenshot 2025-11-29 095420" src="https://github.com/user-attachments/assets/c66a278f-351b-492b-a60b-2804fa037f48" />
 
 Health Care Services
 
@@ -61,19 +56,15 @@ Health Care About Page
 
 🌺★¸.•☆•.¸★ LOGIN PAGE  ★⡀.•☆•.★
 
-
- <img width="1901" height="911" alt="image" src="https://github.com/user-attachments/assets/2d6a4b36-163b-4e6e-be61-c8ee29f490dd" />
+<img width="1901" height="913" alt="image" src="https://github.com/user-attachments/assets/ad40115e-0143-4aac-9a70-f71a5f58f457" />
 
 Google Authentication Page
 
-<img width="1897" height="912" alt="image" src="https://github.com/user-attachments/assets/42368f09-0a7f-4f47-807a-0201cfb21a9c" />
-
+<img width="1897" height="912" alt="image" src="https://github.com/user-attachments/assets/5f4472bc-e282-4fd1-b0fa-0b5b02ff7fd2" />
 
 Profile Page
 
-<img width="1898" height="912" alt="image" src="https://github.com/user-attachments/assets/b4d233ad-e617-4adf-b13d-96ed9d3dc02e" />
-
-
-              
+<img width="1898" height="912" alt="image" src="https://github.com/user-attachments/assets/0db3c85f-da8c-4418-93e1-5c8c117fd279" />
+            
 
 
