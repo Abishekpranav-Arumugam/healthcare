@@ -16,7 +16,7 @@ const LoadingScreen = () => {
         <div className="circle2"></div>
       </div>
       <div className="text">
-        <strong>Develop by AKSHAY</strong>Loading.....
+        <strong>Loading.....</strong>
       </div>
     </Box>
   );
