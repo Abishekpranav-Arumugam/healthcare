@@ -1,14 +1,26 @@
 import { useEffect, useState } from 'react';
-import { signInWithPopup, GoogleAuthProvider, getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, updateProfile, FacebookAuthProvider, GithubAuthProvider } from "firebase/auth";
-import initializeAuthentication from '../components/Login/Firebase/Firebase.init';
+import { 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    FacebookAuthProvider, 
+    GithubAuthProvider, 
+    onAuthStateChanged, 
+    signOut, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    sendEmailVerification, 
+    sendPasswordResetEmail, 
+    updateProfile 
+} from "firebase/auth";
 
+// IMPORT AUTH DIRECTLY FROM YOUR CONFIG FILE
+// This replaces the old initializeAuthentication import
+import { auth } from '../components/Login/Firebase/Firebase.config'; 
 
-initializeAuthentication();
-
+// Initialize providers
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 const githubProvider = new GithubAuthProvider();
-
 
 const useFirebase = () => {
     const [userName, setUserName] = useState('');
@@ -18,7 +30,8 @@ const useFirebase = () => {
     const [password, setPass] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const auth = getAuth();
+
+    // Note: We removed 'const auth = getAuth();' because we imported 'auth' at the top
 
     const singInUsingGoogle = () => {
         setIsLoading(true);
@@ -27,20 +40,17 @@ const useFirebase = () => {
     }
 
     const singInUsingFacebook = () => {
-        
         // setisLogin(true);
         return signInWithPopup(auth, facebookProvider)
     }
 
     const singInUsingGithub = () => {
-
         // setisLogin(true);
         return signInWithPopup(auth, githubProvider)
     }
 
     useEffect(() => {
         const unsubscribed = onAuthStateChanged(auth, (user) => { 
-
             //amra jodi unsubscribed function use na kori tahole eta error throw koreb
             if (user) {
                 setUser(user);
@@ -49,7 +59,6 @@ const useFirebase = () => {
             }
             setIsLoading(false);
             setisLogin(true);
-
         });
         return () => unsubscribed;
     }, [])
@@ -57,11 +66,11 @@ const useFirebase = () => {
     const logout = () => {
         setIsLoading(true);
         signOut(auth).then(() => {
-
+            setUser({});
         }).catch((error) => {
             setUser(error);
         })
-            .finally(() => setIsLoading(false));
+        .finally(() => setIsLoading(false));
     }
 
     const handleRegister = e => {
@@ -80,7 +89,6 @@ const useFirebase = () => {
             return;
         }
         isLogin ? loginRegisterUser(mail, password) : registeruser(mail, password);
-
     }
 
     // register new user
@@ -99,12 +107,14 @@ const useFirebase = () => {
 
     //set user name
     const updateUserName = () => {
-        updateProfile(auth.currentUser, {
-            displayName: userName
-        }).then(() => { })
+        if(auth.currentUser){
+            updateProfile(auth.currentUser, {
+                displayName: userName
+            }).then(() => { })
             .catch((error) => {
                 setError(error.message);
             })
+        }
     }
 
     //login register user
@@ -116,20 +126,21 @@ const useFirebase = () => {
             .catch((error) => {
                 setError(error.message)
             })
-
     }
 
     //mail address verfication email
     const verifyUserMail = () => {
-        sendEmailVerification(auth.currentUser)
+        if(auth.currentUser){
+            sendEmailVerification(auth.currentUser)
             .then(() => {
                 setError('verificaition mail has been sent to your mail');
             })
+        }
     }
+
     const handleUserName = e => {
         setUserName(e.target.value);
     }
-
 
     const handleEmail = e => {
         setMail(e.target.value);
@@ -158,8 +169,6 @@ const useFirebase = () => {
             })
         setError('pass reset mail is sent');
     }
-
-
 
     return {
         singInUsingGoogle,
