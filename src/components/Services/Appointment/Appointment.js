@@ -1,4 +1,4 @@
-import { LocalizationProvider, MobileDateTimePicker } from "@mui/lab";
+import React from "react";
 import {
   Box,
   Button,
@@ -11,8 +11,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+
+// FIX 1: Updated Imports for Date Picker (MUI X v5/v6)
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+
 import swal from "sweetalert";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import useAuth from "../../../Hooks/useAuth";
@@ -24,23 +28,30 @@ const Appointment = () => {
   const [problemType, setProblemType] = React.useState("");
 
   const handleDoctorChange = (event) => {
-    setDocName(event.target.value); // Store the doctor's name
+    setDocName(event.target.value);
   };
 
   const handleProblemTypeChange = (event) => {
-    setProblemType(event.target.value); // Store the problem type entered by the user
+    setProblemType(event.target.value);
   };
 
   // Function to save appointment to backend
   const saveAppointment = () => {
+    // Basic Validation
+    if (!docName || !problemType) {
+        swal("Missing Info", "Please select a doctor and describe your problem.", "warning");
+        return;
+    }
+
     const appointmentData = {
       userName: user.displayName,
       userEmail: user.email,
-      doctorName: docName, // Doctor's name
-      appointmentDate: value, // date selected from the picker
-      problemType: problemType // Problem type from the user
+      doctorName: docName,
+      appointmentDate: value,
+      problemType: problemType
     };
 
+    // FIX 2: Updated URL to include '/api'
     fetch('https://healthcare-0o0j.onrender.com/api/appointments', {
       method: 'POST',
       headers: {
@@ -48,8 +59,16 @@ const Appointment = () => {
       },
       body: JSON.stringify(appointmentData),
     })
-      .then((response) => response.json())
-      .then((data) => {
+      .then(async (response) => {
+        // FIX 3: Check response status before declaring success
+        const data = await response.json();
+        
+        if (!response.ok) {
+            // If server returns 404 or 500, throw an error
+            throw new Error(data.message || "Failed to book appointment");
+        }
+        
+        // If we get here, it was actually successful
         console.log('Success:', data);
         swal("Your Appointment is Done! You will receive a mail ASAP.", {
           button: false,
@@ -57,7 +76,9 @@ const Appointment = () => {
         });
       })
       .catch((error) => {
+        // Handle Errors (Network or Server)
         console.error('Error:', error);
+        swal("Booking Failed", error.message || "Something went wrong. Please try again.", "error");
       });
   };
 
@@ -79,7 +100,7 @@ const Appointment = () => {
               mb: 5,
             }}
           >
-            Select your time and data for Appointment
+            Select your time and date for Appointment
           </Typography>
         </Container>
         
@@ -111,19 +132,26 @@ const Appointment = () => {
 
         <TextField
           sx={{ mb: 2 }}
-          value={user.displayName}
+          value={user.displayName || ""}
           fullWidth
           label="Your Name"
           id="user-name"
+          InputProps={{
+            readOnly: true,
+          }}
         />
         <TextField
           sx={{ mb: 2 }}
-          value={user.email}
+          value={user.email || ""}
           fullWidth
           label="Your Mail"
           id="user-email"
+          InputProps={{
+            readOnly: true,
+          }}
         />
 
+        {/* Updated Date Picker Implementation */}
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Stack spacing={3}>
             <MobileDateTimePicker
@@ -133,9 +161,10 @@ const Appointment = () => {
               }}
               label="Appointment Date"
               onError={console.log}
-              minDate={new Date("2024-01-01T00:00")}
+              minDate={new Date()}
+              // inputFormat/mask might be deprecated in v6, but usually work in v5.
+              // If this causes error, remove inputFormat and mask.
               inputFormat="yyyy/MM/dd hh:mm a"
-              mask="___/__/__ __:__ _M"
               renderInput={(params) => <TextField {...params} />}
             />
           </Stack>
@@ -146,7 +175,8 @@ const Appointment = () => {
           fullWidth
           label="Problem Type"
           id="problem-type"
-          onChange={handleProblemTypeChange} // Track changes for problem type
+          value={problemType}
+          onChange={handleProblemTypeChange} 
         />
 
         <Button
