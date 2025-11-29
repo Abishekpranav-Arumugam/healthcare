@@ -25,7 +25,7 @@ const Doctors = () => {
             };
     
             // Make POST request to backend API
-            axios.post('http://localhost:4000/api/appointments', appointmentData)
+            axios.post('https://healthcare-0o0j.onrender.com/api/appointments', appointmentData)
                 .then((response) => {
                     swal(`Your Appointment data is :➥ ${value} You will get a confirmation Email soon if the slot is free.`);
                 })

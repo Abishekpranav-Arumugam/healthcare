@@ -41,7 +41,7 @@ const Appointment = () => {
       problemType: problemType // Problem type from the user
     };
 
-    fetch('http://localhost:5000/appointments', {
+    fetch('https://healthcare-0o0j.onrender.com/appointments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
