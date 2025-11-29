@@ -6,15 +6,15 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const app = express();
 
+// 1. Middleware
 app.use(cors({
-    origin: ["https://healthcare-iota-lime.vercel.app", "http://localhost:3000"], // Add your Vercel URL here
+    origin: ["https://healthcare-iota-lime.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true
 }));
 app.use(bodyParser.json());
 
-// 2. Connection Logic Update: Optimized for Serverless (Caching)
-// We don't use app.listen here anymore.
+// 2. Connection Logic (Works for both Serverless and Traditional Server)
 let isConnected = false;
 
 const connectToDatabase = async () => {
@@ -22,7 +22,6 @@ const connectToDatabase = async () => {
         return;
     }
     
-    // connecting to process.env.MONGODB_URI instead of localhost
     try {
         await mongoose.connect(process.env.MONGODB_URI, {
             useNewUrlParser: true,
@@ -35,17 +34,17 @@ const connectToDatabase = async () => {
     }
 };
 
-// 3. Schema Update: Merged fields from server.js and serverapp.js
+// 3. Schema Definition
 const appointmentSchema = new mongoose.Schema({
-    // Fields from server.js
+    // Fields from Form A
     userName: String,
     userEmail: String,
     problemType: String,
     
-    // Fields from serverapp.js
+    // Fields from Form B
     doctorId: String,
     specialize: String,
-    patientName: String, // Similar to userName
+    patientName: String, 
 
     // Common fields
     doctorName: String,
@@ -55,15 +54,14 @@ const appointmentSchema = new mongoose.Schema({
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 
-// 4. Route Update: Handle the Logic
+// 4. Routes
 app.post('/api/appointments', async (req, res) => {
     await connectToDatabase();
 
     try {
-        // We accept data from both your frontend forms
         const { 
-            userName, userEmail, doctorName, appointmentDate, problemType, // from Form A
-            doctorId, specialize, patientName // from Form B
+            userName, userEmail, doctorName, appointmentDate, problemType, 
+            doctorId, specialize, patientName 
         } = req.body;
 
         const newAppointment = new Appointment({
@@ -84,10 +82,25 @@ app.post('/api/appointments', async (req, res) => {
     }
 });
 
-// Default route for testing
+// Default route for testing health
 app.get('/', (req, res) => {
-    res.send("Healthcare Backend API is running on Vercel!");
+    res.send("Healthcare Backend API is running!");
 });
 
-// 5. Export Update: Essential for Vercel
+// =============================================================
+// 5. CRITICAL FIX FOR RENDER DEPLOYMENT
+// =============================================================
+// Render assigns a port automatically in process.env.PORT
+const PORT = process.env.PORT || 4000;
+
+// This condition checks if the file is being run directly (Render uses 'npm start')
+// If it is, we listen on the port.
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+// 6. Export for Vercel
+// Vercel handles the listening automatically, so it just needs the export.
 module.exports = app;
